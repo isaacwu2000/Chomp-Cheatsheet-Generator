@@ -102,24 +102,21 @@ public class Main {
             boolean winningPosition = false;
 
             ArrayList<Move> validMoves = getValidMoves(position);
-            while (!winningPosition) {
-                for (Move move : validMoves) {
-                    int[] resultingPosition = doMove(position, move);
-                    // Seeing if the move on results in a losing position for the opponent according to the CheatReferences
-                    for (CheatReference ref : CheatReferences) {
-                        if (Arrays.equals(ref.position, resultingPosition) && ref.lost) {
-                            CheatReferences.add(new CheatReference(position, move));
-                            winningPosition = true;
-                            break;
-                        }
+            for (Move move : validMoves) {
+                int[] resultingPosition = doMove(position, move);
+                // Seeing if the move on results in a losing position for the opponent according to the CheatReferences
+                for (int a=0; a<CheatReferences.size(); a++) {
+                    CheatReference ref = CheatReferences.get(a);
+                    if (Arrays.equals(ref.position, resultingPosition) && ref.lost) {
+                        CheatReferences.add(new CheatReference(position, move));
+                        winningPosition = true;
+                        break;
                     }
                 }
-                if (!winningPosition) {
-                    CheatReferences.add(new CheatReference(position, true));
-                    break;
-                }
             }
-
+            if (!winningPosition) {
+                CheatReferences.add(new CheatReference(position, true));
+            }
         }
 
         for (CheatReference ref : CheatReferences) {
