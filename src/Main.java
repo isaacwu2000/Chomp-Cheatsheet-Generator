@@ -12,7 +12,7 @@ I copied quite a bit of code from this Java file guide: https://www.w3schools.co
 */
 
 public class Main {
-    private static int n=3;
+    private static int n=2;
     private static ArrayList<int[]> positions = new ArrayList<int[]>();
 
     private static class Move {
@@ -161,7 +161,7 @@ public class Main {
     }
 
     public static String CreateCheatsheetString(ArrayList<CheatReference> CheatReferences) {
-        String cheatsheetString = "Chomp Cheatsheet for a" + String.valueOf(n) + "x" + String.valueOf(n) + "Board\n";
+        String cheatsheetString = "Chomp Cheatsheet for a " + String.valueOf(n) + "x" + String.valueOf(n) + " Board\n";
         for (CheatReference ref : CheatReferences) {
             cheatsheetString += ref.toString() + "\n";
         }
@@ -169,7 +169,10 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        System.out.println("Running");
         ArrayList<CheatReference> CheatReferences = CreateCheatsheet();
+        System.out.println("Created Cheatsheet");
         WriteCheatsheet(CreateCheatsheetString(CheatReferences));
+        System.out.println("Wrote Cheatsheet to a file");
     }
 }
