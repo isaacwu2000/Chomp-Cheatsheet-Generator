@@ -1,0 +1,24 @@
+Chomp Cheatsheet for a 3x3 Board
+position: [1, 0, 0], winning move: none
+position: [1, 1, 0], winning move: (1, 0)
+position: [1, 1, 1], winning move: (1, 0)
+position: [2, 0, 0], winning move: (0, 1)
+position: [2, 1, 0], winning move: none
+position: [2, 1, 1], winning move: (2, 0)
+position: [2, 2, 0], winning move: (1, 1)
+position: [2, 2, 1], winning move: none
+position: [2, 2, 2], winning move: (2, 1)
+position: [3, 0, 0], winning move: (0, 1)
+position: [3, 1, 0], winning move: (0, 2)
+position: [3, 1, 1], winning move: none
+position: [3, 2, 0], winning move: none
+position: [3, 2, 1], winning move: (0, 2)
+position: [3, 2, 1], winning move: (1, 1)
+position: [3, 2, 1], winning move: (2, 0)
+position: [3, 2, 2], winning move: (1, 1)
+position: [3, 2, 2], winning move: (2, 0)
+position: [3, 3, 0], winning move: (1, 2)
+position: [3, 3, 1], winning move: (0, 2)
+position: [3, 3, 1], winning move: (1, 1)
+position: [3, 3, 2], winning move: (1, 1)
+position: [3, 3, 3], winning move: (1, 1)
