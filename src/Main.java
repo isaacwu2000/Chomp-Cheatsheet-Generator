@@ -58,10 +58,21 @@ public class Main {
         return resultingPosition;
     }
 
+    private static ArrayList<Move> getValidMoves(int[] position) {
+        ArrayList<Move> validMoves = new ArrayList<Move>();
+        for (int col=0; col<position.length; col++) {
+            for (int row=0; row<position[col]; row++) {
+                validMoves.add(new Move(col, row));
+            }
+        }
+        return validMoves;
+    }
+
     public static void main(String[] args) {
         //setPositions(n, n, new ArrayList<Integer>());
-        int[] pos = {3,3,3};
-        Move move = new Move(0,2);
-        System.out.println(Arrays.toString(doMove(pos, move)));
+        int[] pos = {2,1,0};
+        for (Move move : getValidMoves(pos)) {
+            System.out.println("x: "+Integer.toString((Integer)move.x)+", y: "+Integer.toString((Integer)move.y));
+        }
     }
 }
