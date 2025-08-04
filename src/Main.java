@@ -1,5 +1,15 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+/* Citations
+I didn't use Generative AI for this project except for Google AI Search Overviews
+I only used the internet (primarily Geeks for Geeks and W3 Schools) for reference
+I copied quite a bit of code from this Java file guide: https://www.w3schools.com/java/java_files_create.asp
+- Isaac Wu, August 4th, 2025
+*/
 
 public class Main {
     private static int n=3;
@@ -90,7 +100,7 @@ public class Main {
         return validMoves;
     }
 
-    public static void main(String[] args) {
+    public static ArrayList<CheatReference> CreateCheatsheet() {
         setPositions(n, n, new ArrayList<Integer>()); // The ArrayList 'positions' now contains all the positions
         positions.remove(0); // Removing [0,0,0..
         ArrayList<CheatReference> CheatReferences = new ArrayList<CheatReference>();
@@ -118,9 +128,48 @@ public class Main {
                 CheatReferences.add(new CheatReference(position, true));
             }
         }
+        return CheatReferences;
+    }
 
-        for (CheatReference ref : CheatReferences) {
-            System.out.println(ref);
+    public static String CreateCheatsheetFile() {
+        String filename = "cheatsheet_"+String.valueOf(n)+"x"+String.valueOf(n)+".txt";
+        try {
+            File file = new File(filename);
+            if (file.createNewFile()) {
+                System.out.println("File created: " + file.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
         }
+        return filename;
+    }
+
+    public static void WriteCheatsheet(String text) {
+        String filename = CreateCheatsheetFile();
+        try {
+            FileWriter writer = new FileWriter(filename);
+            writer.write(text);
+            writer.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    public static String CreateCheatsheetString(ArrayList<CheatReference> CheatReferences) {
+        String cheatsheetString = "Chomp Cheatsheet for a" + String.valueOf(n) + "x" + String.valueOf(n) + "Board\n";
+        for (CheatReference ref : CheatReferences) {
+            cheatsheetString += ref.toString() + "\n";
+        }
+        return cheatsheetString;
+    }
+
+    public static void main(String[] args) {
+        ArrayList<CheatReference> CheatReferences = CreateCheatsheet();
+        WriteCheatsheet(CreateCheatsheetString(CheatReferences));
     }
 }
