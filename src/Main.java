@@ -5,8 +5,27 @@ public class Main {
     private static int n=3;
     private static ArrayList<int[]> positions = new ArrayList<int[]>();
 
+    private static class Move {
+        public int x;
+        public int y;
+        Move(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    private static class CheatReference {
+        public int[] position = new int[n];
+        public Move move;
+        CheatReference(int[] position, Move move) {
+            this.position = position;
+            this.move = move;
+        }
+        // Create easy way to print this out
+    }
+
     // Overcomplicated recursive method of getting a list of all possible board positions
-    private static void  loop(int dimension, int n, ArrayList<Integer> cols) {
+    private static void setPositions(int dimension, int n, ArrayList<Integer> cols) {
         for (int i=0; i<=n; i++) {
             cols.add(i);
             if (cols.size()==dimension) {
@@ -20,16 +39,29 @@ public class Main {
                 positions.add(colsIntArray);
             }
             else {
-                loop(dimension, i, cols);
+                setPositions(dimension, i, cols);
             }
             cols.remove(cols.size()-1); // Resets the array for the next position
         }
     }
 
-    public static void main(String[] args) {
-        loop(n, n, new ArrayList<Integer>());
-        for (int[] position : positions) {
-            System.out.println(Arrays.toString(position));
+    private static int[] doMove(int[] position, Move move) {
+        int[] resultingPosition = new int[n];
+        for (int i=0; i<position.length; i++) {
+            if (i>=move.x && position[i]>=move.y) {
+                resultingPosition[i] = move.y;
+            }
+            else {
+                resultingPosition[i] = position[i];
+            }
         }
+        return resultingPosition;
+    }
+
+    public static void main(String[] args) {
+        //setPositions(n, n, new ArrayList<Integer>());
+        int[] pos = {3,3,3};
+        Move move = new Move(0,2);
+        System.out.println(Arrays.toString(doMove(pos, move)));
     }
 }
