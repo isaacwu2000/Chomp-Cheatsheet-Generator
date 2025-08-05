@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+// This file is optimized for creating a 10x10 cheatsheet
+// The more general solution that is less optimized is in GeneralSolution.java
+
 /* Citations
 I didn't use Generative AI for this project except for Google AI Search Overviews
 I only used the internet (primarily Geeks for Geeks and W3 Schools) for reference
@@ -15,133 +18,77 @@ I copied quite a bit of code from this Java file guide: https://www.w3schools.co
 Efficiency stuff:
 - use 10 for-loops
 - minimize variables, method calls, iterations
+- todo: remove the "move" class and make everything with the x and y directly
+- todo: remove the "cheatreference" class
 - *make separate list for lost*
  */
 
 public class Main {
-    private static int n=9;
-    private static ArrayList<int[]> positions = new ArrayList<int[]>();
+    private static ArrayList<CheatReference> CheatSheet = new ArrayList<CheatReference>();
+    private static ArrayList<int[]> LostPositions = new ArrayList<int[]>(); // This allows faster reference for determining winningMove
+    private static int[] GameOverPosition = {0, 0, 0};//, 0, 0, 0, 0, 0, 0, 0};
 
     private static class Move {
         public int x;
         public int y;
-        Move(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
+        Move(int x, int y) {this.x = x; this.y = y;}
         @Override
-        public String toString() {
-            return "(" + Integer.toString((Integer) x) + ", " + Integer.toString((Integer) y) + ")";
-        }
+        public String toString() {return "(" + Integer.toString((Integer) x) + ", " + Integer.toString((Integer) y) + ")";}
     }
 
     private static class CheatReference {
-        public int[] position = new int[n];
+        public int[] position;
         public Move winningMove;
         public boolean lost = false;
-        // If there is a winning move
-        CheatReference(int[] position, Move move) {
-            this.position = position;
-            this.winningMove = move;
-        }
-        // if there is a winning move
-        CheatReference(int[] position, boolean lost) {
-            this.position = position;
-            this.lost = true;
-        }
+        CheatReference(int[] position, Move move) {this.position = position; this.winningMove = move;}
+        CheatReference(int[] position, boolean lost) {this.position = position; this.lost = true;}
         @Override
         public String toString() {
-            if (lost) {
-                return "position: " + Arrays.toString(position) + ", winning move: none";
-            }
+            if (lost) {return "position: " + Arrays.toString(position) + ", winning move: none";}
+            else {return "position: " + Arrays.toString(position) + ", winning move: " + winningMove.toString();}
+        }
+    }
+
+    public static void CreateCheatsheet() {
+        // Iterating through all possible valid positions
+        for (int a=1; a<=3; a++) {for (int b=0; b<=a; b++) {for (int c=0; c<=b; c++){// for (int d=0; d<=c; d++){for (int e=0; e<=d; e++){for (int f=0; f<=e; f++){for (int g=0; g<=f; g++){for (int h=0; h<=g; h++){for (int i=0; i<=h; i++){for (int j=0; j<=i; j++){
+            int[] position = {a, b, c};//, d, e, f, g, h, i, j};
+            boolean winningPosition = false; // Once ONE winning position is found, we can break out all the search loops
+            if (Arrays.equals(position, GameOverPosition)) {LostPositions.add(position);}
+            // Iterating over all valid moves
             else {
-                return "position: " + Arrays.toString(position) + ", winning move: " + winningMove.toString();
-            }
-        }
-    }
-
-    // Overcomplicated recursive method of getting a list of all possible board positions
-    private static void setPositions(int dimension, int n, ArrayList<Integer> cols) {
-        for (int i=0; i<=n; i++) {
-            cols.add(i);
-            if (cols.size()==dimension) {
-                // Creating a copy of cols to be an array of integers. This array is then added to the positions
-                int[] colsIntArray = new int[cols.size()];
-                int count = 0;
-                for (Integer col : cols) {
-                    colsIntArray[count] = (int) col;
-                    count++;
-                }
-                positions.add(colsIntArray);
-            }
-            else {
-                setPositions(dimension, i, cols);
-            }
-            cols.remove(cols.size()-1); // Resets the array for the next position
-        }
-    }
-
-    private static int[] doMove(int[] position, Move move) {
-        int[] resultingPosition = new int[n];
-        for (int i=0; i<position.length; i++) {
-            if (i>=move.x && position[i]>=move.y) {
-                resultingPosition[i] = move.y;
-            }
-            else {
-                resultingPosition[i] = position[i];
-            }
-        }
-        return resultingPosition;
-    }
-
-    private static ArrayList<Move> getValidMoves(int[] position) {
-        ArrayList<Move> validMoves = new ArrayList<Move>();
-        for (int col=0; col<position.length; col++) {
-            for (int row=0; row<position[col]; row++) {
-                if (col!=0 || row!=0) {
-                    validMoves.add(new Move(col, row));
-                }
-            }
-        }
-        return validMoves;
-    }
-
-    public static ArrayList<CheatReference> CreateCheatsheet() {
-        setPositions(n, n, new ArrayList<Integer>()); // The ArrayList 'positions' now contains all the positions
-        positions.remove(0); // Removing [0,0,0..
-        ArrayList<CheatReference> CheatReferences = new ArrayList<CheatReference>();
-        CheatReferences.add(new CheatReference(positions.get(0), true));
-
-        // Iterating over all the positions and seeing if there is a winning move for each position
-        for (int i=1; i<positions.size(); i++) {
-            int[] position = positions.get(i);
-            boolean winningPosition = false;
-
-            ArrayList<Move> validMoves = getValidMoves(position);
-            for (Move move : validMoves) {
-                int[] resultingPosition = doMove(position, move);
-                // Seeing if the move on results in a losing position for the opponent according to the CheatReferences
-                for (int a=0; a<CheatReferences.size(); a++) {
-                    CheatReference ref = CheatReferences.get(a);
-                    if (ref.lost && Arrays.equals(ref.position, resultingPosition)) {
-                        CheatReferences.add(new CheatReference(position, move));
-                        winningPosition = true;
-                        break;
+                for (int col = 0; col < position.length; col++) {
+                    for (int row = 0; row < position[col]; row++) {
+                        if (col != 0 || row != 0) {
+                            // Doing the move and recording the resulting position
+                            Move move = new Move(col, row);
+                            int[] resultingPosition = new int[3];
+                            for (int column = 0; column < 3; column++) {
+                                if (column >= move.x && position[column] >= move.y) {
+                                    resultingPosition[column] = move.y;
+                                } else {
+                                    resultingPosition[column] = position[column];
+                                }
+                            }
+                            // Checking if a given move is winning by seeing if it results in a losing position for the opponent
+                            for (int[] losingPosition : LostPositions) {
+                                if (Arrays.equals(resultingPosition, losingPosition)) {
+                                    CheatSheet.add(new CheatReference(position, move));
+                                    winningPosition = true;
+                                    break;
+                                }
+                            }
+                            if (winningPosition) {break;}
+                        }
                     }
                     if (winningPosition) {break;}
                 }
-                if (winningPosition) {break;}
+                if (!winningPosition) {LostPositions.add(position);}
             }
-            if (!winningPosition) {
-                CheatReferences.add(new CheatReference(position, true));
-            }
-
-        }
-        return CheatReferences;
+        }}}//}}}}}}}
     }
-
     public static String CreateCheatsheetFile() {
-        String filename = "cheatsheet_"+String.valueOf(n)+"x"+String.valueOf(n)+".txt";
+        String filename = "cheatsheet_3x3.txt";
         try {
             File file = new File(filename);
             if (file.createNewFile()) {
@@ -170,7 +117,7 @@ public class Main {
     }
 
     public static String CreateCheatsheetString(ArrayList<CheatReference> CheatReferences) {
-        String cheatsheetString = "Chomp Cheatsheet for a " + String.valueOf(n) + "x" + String.valueOf(n) + " Board\n";
+        String cheatsheetString = "Chomp Cheatsheet for a 3x3 Board\n";
         for (CheatReference ref : CheatReferences) {
             cheatsheetString += ref.toString() + "\n";
         }
@@ -178,10 +125,9 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        System.out.println("Running");
-        ArrayList<CheatReference> CheatReferences = CreateCheatsheet();
-        System.out.println("Created Cheatsheet");
-        WriteCheatsheet(CreateCheatsheetString(CheatReferences));
-        System.out.println("Wrote Cheatsheet to a file");
+        System.out.println("starting");
+        CreateCheatsheet();
+        System.out.println("done");
+        WriteCheatsheet(CreateCheatsheetString(CheatSheet));
     }
 }
