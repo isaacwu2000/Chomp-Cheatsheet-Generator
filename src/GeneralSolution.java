@@ -11,14 +11,7 @@ I copied quite a bit of code from this Java file guide: https://www.w3schools.co
 - Isaac Wu, August 4th, 2025
 */
 
-/*
-Efficiency stuff:
-- use 10 for-loops
-- minimize variables, method calls, iterations
-- *make separate list for lost*
- */
-
-public class Main {
+public class GeneralSolution {
     private static int n=9;
     private static ArrayList<int[]> positions = new ArrayList<int[]>();
 
