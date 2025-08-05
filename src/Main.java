@@ -1,8 +1,5 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.*;
+import java.io.*;
 
 // This file is optimized for creating a 10x10 cheatsheet
 // The more general solution that is less optimized is in GeneralSolution.java
@@ -19,7 +16,6 @@ Efficiency stuff:
 - use 10 for-loops
 - minimize variables, method calls, iterations
 - todo: remove the "move" class and make everything with the x and y directly
-- todo: remove the "cheatreference" class
 - *make separate list for lost*
  */
 
@@ -28,44 +24,31 @@ public class Main {
     private static ArrayList<int[]> LostPositions = new ArrayList<int[]>(); // This allows faster reference for determining winningMove
     private static int[] GameOverPosition = {0, 0, 0};//, 0, 0, 0, 0, 0, 0, 0};
 
-    private static class Move {
-        public int x;
-        public int y;
-        Move(int x, int y) {this.x = x; this.y = y;}
-        @Override
-        public String toString() {return "(" + Integer.toString((Integer) x) + ", " + Integer.toString((Integer) y) + ")";}
-    }
-
     private static class CheatReference {
         public int[] position;
-        public Move winningMove;
+        public String winningMove;
         public boolean lost = false;
-        CheatReference(int[] position, Move move) {this.position = position; this.winningMove = move;}
-        CheatReference(int[] position, boolean lost) {this.position = position; this.lost = true;}
+        CheatReference(int[] position, int x, int y) {this.position = position; this.winningMove = "("+x+", "+ y+")";}
         @Override
-        public String toString() {
-            if (lost) {return "position: " + Arrays.toString(position) + ", winning move: none";}
-            else {return "position: " + Arrays.toString(position) + ", winning move: " + winningMove.toString();}
-        }
+        public String toString() {return "position: " + Arrays.toString(position) + ", winning move: " + winningMove;}
     }
 
     public static void CreateCheatsheet() {
         // Iterating through all possible valid positions
-        for (int a=1; a<=3; a++) {for (int b=0; b<=a; b++) {for (int c=0; c<=b; c++){// for (int d=0; d<=c; d++){for (int e=0; e<=d; e++){for (int f=0; f<=e; f++){for (int g=0; g<=f; g++){for (int h=0; h<=g; h++){for (int i=0; i<=h; i++){for (int j=0; j<=i; j++){
-            int[] position = {a, b, c};//, d, e, f, g, h, i, j};
+        for (int a=1; a<=10; a++) {for (int b=0; b<=a; b++) {for (int c=0; c<=b; c++){ for (int d=0; d<=c; d++){for (int e=0; e<=d; e++){for (int f=0; f<=e; f++){for (int g=0; g<=f; g++){for (int h=0; h<=g; h++){for (int i=0; i<=h; i++){for (int j=0; j<=i; j++){
+            int[] position = {a, b, c, d, e, f, g, h, i, j};
             boolean winningPosition = false; // Once ONE winning position is found, we can break out all the search loops
             if (Arrays.equals(position, GameOverPosition)) {LostPositions.add(position);}
             // Iterating over all valid moves
             else {
-                for (int col = 0; col < position.length; col++) {
-                    for (int row = 0; row < position[col]; row++) {
-                        if (col != 0 || row != 0) {
+                for (int x = 0; x < position.length; x++) {
+                    for (int y = 0; y < position[x]; y++) {
+                        if (x != 0 || y != 0) {
                             // Doing the move and recording the resulting position
-                            Move move = new Move(col, row);
-                            int[] resultingPosition = new int[3];
-                            for (int column = 0; column < 3; column++) {
-                                if (column >= move.x && position[column] >= move.y) {
-                                    resultingPosition[column] = move.y;
+                            int[] resultingPosition = new int[10];
+                            for (int column = 0; column < 10; column++) {
+                                if (column >= x && position[column] >= y) {
+                                    resultingPosition[column] = y;
                                 } else {
                                     resultingPosition[column] = position[column];
                                 }
@@ -73,7 +56,7 @@ public class Main {
                             // Checking if a given move is winning by seeing if it results in a losing position for the opponent
                             for (int[] losingPosition : LostPositions) {
                                 if (Arrays.equals(resultingPosition, losingPosition)) {
-                                    CheatSheet.add(new CheatReference(position, move));
+                                    CheatSheet.add(new CheatReference(position, x, y));
                                     winningPosition = true;
                                     break;
                                 }
@@ -85,10 +68,10 @@ public class Main {
                 }
                 if (!winningPosition) {LostPositions.add(position);}
             }
-        }}}//}}}}}}}
+        }}}}}}}}}}
     }
     public static String CreateCheatsheetFile() {
-        String filename = "cheatsheet_3x3.txt";
+        String filename = "cheatsheet_10x10.txt";
         try {
             File file = new File(filename);
             if (file.createNewFile()) {
@@ -117,7 +100,7 @@ public class Main {
     }
 
     public static String CreateCheatsheetString(ArrayList<CheatReference> CheatReferences) {
-        String cheatsheetString = "Chomp Cheatsheet for a 3x3 Board\n";
+        String cheatsheetString = "Chomp Cheatsheet for a 10x10 Board\n";
         for (CheatReference ref : CheatReferences) {
             cheatsheetString += ref.toString() + "\n";
         }
@@ -125,9 +108,9 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        System.out.println("starting");
+        System.out.println("Running");
         CreateCheatsheet();
-        System.out.println("done");
+        System.out.println("Created Cheatsheet");
         WriteCheatsheet(CreateCheatsheetString(CheatSheet));
     }
 }
